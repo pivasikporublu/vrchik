@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-physics-system@3.5.0/dist/aframe-physics-system.min.js"></script>
+</head>
+<body>
+    <a-assets>
+        <a-asset-item id="among" src="lol/scene.gltf"></a-asset-item>
+      </a-assets>
+    <a-scene>
+        <a-sky color="#ADD8E6"></a-sky>
+        <a-plane position="0 -1 -5" rotation="-90 0 0" width="30" height="30" color="pink"></a-plane>
+        <a-entity windows-motion-controls="hand: left"></a-entity>
+        <a-entity windows-motion-controls="hand: right"></a-entity>
+
+        <a-sphere class="collectible" position="2 0.5 -5" radius="0.5" color="#4CC3D9" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="-2 0.5 -5" radius="0.5" color="#4CC3D9" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="0 0.5 -5" radius="0.5" color="#4CC3D9" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="1 0.5 -3" radius="0.5" color="#FF6347" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="-1 0.5 -3" radius="0.5" color="#FF6347" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="3 0.5 -7" radius="0.5" color="#FFD700" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="-3 0.5 -7" radius="0.5" color="#FFD700" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="0 0.5 -7" radius="0.5" color="#FFD700" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="2 0.5 -10" radius="0.5" color="#9ACD32" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="-2 0.5 -10" radius="0.5" color="#9ACD32" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="0 0.5 -12" radius="0.5" color="#9ACD32" dynamic-body></a-sphere>;
+        <a-sphere class="collectible" position="3 0.5 -12" radius="0.5" color="#FF4500" dynamic-body></a-sphere>
+        <a-sphere class="collectible" position="-3 0.5 -12" radius="0.5" color="#FF4500" dynamic-body></a-sphere>
+
+        <a-gltf-model src="#among"></a-gltf-model>
+
+        <a-entity id="score" position="-2 3 -4">
+            <a-text value="Score: 0" color="white" align="left"></a-text>
+        </a-entity>
+        <a-entity id="timer" position="-2 2.5 -4">
+            <a-text value="Time: 60" color="white" align="left"></a-text>
+        </a-entity>
+        <a-entity id="gameOver" position="0 1 -3" visible="false">
+            <a-text value="Game Over!" color="white" align="center" width="4"></a-text>
+        </a-entity>
+
+
+        <a-entity id="restartButton" position="0 0 -3" visible="false" geometry="primitive: plane; width: 2; height: 1" material="color: #FF4500; shader: flat" text="value: Click here to restart; align: center; color: white" cursor="true"></a-entity>
+        <a-camera>
+            <a-cursor></a-cursor>
+          </a-camera>
+    </a-scene>
+
+    <script>
+        let score = 0;
+        let timeLeft = 60; 
+        let gameActive = true;
+        const scoreDisplay = document.getElementById('score').children[0];
+        const timerDisplay = document.getElementById('timer').children[0]; 
+        const gameOverDisplay = document.getElementById('gameOver');
+        const restartButton = document.getElementById('restartButton');
+
+
+        function updateScore() {
+            scoreDisplay.setAttribute('value', 'Score: ' + score);
+        }
+
+
+        function collectObject(event) {
+            if (gameActive) {
+                score++;
+                updateScore();
+                const collectible = event.target; 
+                collectible.parentNode.removeChild(collectible); 
+            }
+        }
+
+
+        const collectibles = document.querySelectorAll('.collectible');
+        collectibles.forEach(collectible => {
+            collectible.addEventListener('click', collectObject);
+        });
+
+   
+        const countdown = setInterval(() => {
+            if (gameActive) {
+                timeLeft--;
+                timerDisplay.setAttribute('value', 'Time: ' + timeLeft);
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }
+        }, 1000);
+
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(countdown);
+            gameOverDisplay.setAttribute('visible', 'true');
+            restartButton.setAttribute('visible', 'true');
+            restartButton.children[0].setAttribute('value', 'Game Over! Final Score: ' + score + '. Click to restart');
+        }
+
+
+        restartButton.addEventListener('click', function () {
+            location.reload(); 
+        });
+   </script>
+ </body>
+</html>
