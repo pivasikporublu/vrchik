@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Frame Example</title>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
+</head>
+<body>
+    <a-scene>
+      <a-assets>
+        <img id="box1" src="/1.jpg" />
+        <video id="int" src="2.mp4" autoplay="true" loop="true"></video>
+
+      </a-assets>
+        
+        <a-sky color="#ADD8E6"></a-sky>
+        <a-sound src="/3.mp3" autoplay="true" position="0 1 0"></a-sound>
+        <a-box position="0 75 -300" width="200" height="400ws" depth="1"  material="src: #int"></a-box>
+
+        <a-entity light="type: ambient; color: #FFC0CB"></a-entity>
+        <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
+
+        <a-text value="INTERNET YAMERO" align="center" position="0 2 -2" color="	#FF1493" width="5s"></a-text>
+
+        <a-plane position="0 -1 -5" rotation="-90 0 0" width="30" height="30" color="pink"></a-plane>
+ 
+        <a-entity geometry="primitive: box" material="src: #box1" position="2 1 -3"  animation="property: rotation; to: 0 180 0; dur: 1000; loop: true" ></a-entity>
+        <a-entity geometry="primitive: box" material="src: #box1" position="-2 1 -3" animation="property: rotation; to: 0 180 0; dur: 1000; loop: true"></a-entity>
+
+        <a-sphere position="6 2 -6" radius="1" color="#FFB6C1" animation="property: position; to: 6 0 -6; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine" rotation="0 0 0" material="shader: flat;"></a-sphere>
+
+        <a-sphere position="-6 2 -6" radius="1" color="#FFB6C1" animation="property: position; to: -6 0 -6; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine" rotation="0 0 0" material="shader: flat;"></a-sphere>
+        
+        <a-entity id="stopButton" position="0 1 -2" geometry="primitive: plane; height: 0.5; width: 1; depth: 0.1" material="color: #FF69B4" text="value: Stop Video and Music; align: center; color: white;" 
+        class="clickable"></a-entity>
+
+     <a-camera>
+       <a-cursor></a-cursor>
+     </a-camera>
+    </a-scene>
+    <script>
+      const video = document.getElementById('int');
+      const audio = document.querySelector('a-sound');
+
+      document.getElementById('stopButton').addEventListener('click', function () {
+        if (!video.paused) {
+          video.pause();
+          audio.components.sound.stopSound();
+        } else {
+          video.play();
+          audio.components.sound.playSound(); 
+        }
+      });
+
+      </script>
+</body>
+</html>
